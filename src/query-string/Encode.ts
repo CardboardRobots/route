@@ -4,12 +4,10 @@ export interface EncodeOptions {
 
 export function encode(obj: Record<string, any>, options: EncodeOptions = {}) {
     const entries: Entry[] = [];
-    for (let name in obj) {
-        if (obj.hasOwnProperty(name)) {
-            const value = obj[name];
-            const key = encodeURIComponent(name);
-            createEntries(key, value, entries, options);
-        }
+    for (const name of Object.keys(obj)) {
+        const value = obj[name];
+        const key = encodeURIComponent(name);
+        createEntries(key, value, entries, options);
     }
     return entries.join('&');
 }
@@ -63,22 +61,21 @@ function createArrayEntries<T>(name: string, array: T[], output: Entry[], option
             }
             return output;
         case 'bracket':
-        default:
+        default: {
             const key = `${name}[]`;
-            for (let item of array) {
+            for (const item of array) {
                 createEntries(key, item, output, options);
             }
             return output;
+        }
     }
 }
 
 function createObjectEntries(name: string, obj: Record<string, any>, output: Entry[], options: EncodeOptions) {
-    for (let property in obj) {
-        if (obj.hasOwnProperty(property)) {
-            const value = obj[property];
-            const key = `${name}[${encodeURIComponent(property)}]`;
-            createEntries(key, value, output, options);
-        }
+    for (const property of Object.keys(obj)) {
+        const value = obj[property];
+        const key = `${name}[${encodeURIComponent(property)}]`;
+        createEntries(key, value, output, options);
     }
     return output;
 }

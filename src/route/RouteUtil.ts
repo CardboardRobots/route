@@ -1,14 +1,14 @@
 const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
 
-export function getParameterNames(functionHandle: Function) {
-    let definition = functionHandle.toString().replace(STRIP_COMMENTS, '');
+export function getParameterNames(functionHandle: (...args: any) => any) {
+    const definition = functionHandle.toString().replace(STRIP_COMMENTS, '');
     if (definition.startsWith('function')) {
         // We have a standard function
         return definition.slice(definition.indexOf('(') + 1, definition.indexOf(')')).match(/([^\s,]+)/g) || [];
     } else {
         // We have an arrow function
-        let arrowIndex = definition.indexOf('=>');
-        let parenthesisIndex = definition.indexOf('(');
+        const arrowIndex = definition.indexOf('=>');
+        const parenthesisIndex = definition.indexOf('(');
         if (parenthesisIndex > -1 && parenthesisIndex < arrowIndex) {
             return definition.slice(parenthesisIndex + 1, definition.indexOf(')')).match(/([^\s,]+)/g) || [];
         } else {
@@ -17,7 +17,7 @@ export function getParameterNames(functionHandle: Function) {
     }
 }
 
-export function getArgumentNames(func: Function) {
+export function getArgumentNames(func: (...args: any) => any) {
     // First match everything inside the function argument parens.
     const matches = func
         .toString()
@@ -34,16 +34,16 @@ export function getArgumentNames(func: Function) {
             })
             // Ensure no undefined values are added.
             .filter(function (value: string) {
-                return !!value;
+                return Boolean(value);
             })
     );
 }
 
 export function stringToRegex(definition: string): RegExp {
-    return new RegExp('^' + definition.replace(/\//g, '\\/').replace(/:(\w*)/g, '([^/]*)') + '$', 'i');
+    return new RegExp(`^${definition.replace(/\//g, '\\/').replace(/:(\w*)/g, '([^/]*)')}$`, 'i');
 }
 
-export function functionToRegex(prefix: string, enter: Function): RegExp {
+export function functionToRegex(prefix: string, enter: (...args: any) => any): RegExp {
     const params = getParameterNames(enter);
     params.unshift(prefix);
     return stringToRegex(params.join('/:'));

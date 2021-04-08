@@ -8,10 +8,10 @@ describe('GraphDecode', function () {
         });
     });
     it('should decode multiple key value pairs', function () {
-        const result = decode('a=valueA&b=valueB');
+        const result = decode('nameA=valueA&nameBb=valueB');
         expect(result).toStrictEqual({
-            a: 'valueA',
-            b: 'valueB',
+            nameA: 'valueA',
+            nameBb: 'valueB',
         });
     });
 

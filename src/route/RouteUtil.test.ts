@@ -3,6 +3,7 @@ import { getArgumentNames, getParameterNames } from './RouteUtil';
 describe('RouteUtil', function () {
     describe('getParameterNames', function () {
         it('should get parameters from a function', function () {
+            // eslint-disable-next-line no-eval
             const method = eval(`
 
 function method(a, b) {
@@ -17,6 +18,7 @@ method;`);
         });
 
         it('should get parameters from an anonymous function', function () {
+            // eslint-disable-next-line no-eval
             const method = eval(`
 
 const method = function (a, b) {
@@ -31,6 +33,7 @@ method;`);
         });
 
         it('should get parameters from an arrow function', function () {
+            // eslint-disable-next-line no-eval
             const method = eval(`
 
 const method = (a, b) => {
@@ -47,6 +50,7 @@ method;`);
 
     describe('getArgumentNames', function () {
         it('should get parameters from a function', function () {
+            // eslint-disable-next-line no-eval
             const method = eval(`
 
 function method(a, b) {
@@ -61,6 +65,7 @@ method;`);
         });
 
         it('should get parameters from an anonymous function', function () {
+            // eslint-disable-next-line no-eval
             const method = eval(`
 
 const method = function (a, b) {
@@ -75,6 +80,7 @@ method;`);
         });
 
         it('should get parameters from an arrow function', function () {
+            // eslint-disable-next-line no-eval
             const method = eval(`
 
 const method = (a, b) => {

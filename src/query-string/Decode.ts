@@ -12,13 +12,13 @@ export function decode<
 function createEntries(query: string) {
     const entries: GraphEntry[] = [];
     const parts = query.split('&');
-    for (let part of parts) {
-        let pieces = part.split('=');
+    for (const part of parts) {
+        const pieces = part.split('=');
         if (pieces.length !== 2) {
             continue;
         }
-        let key = pieces[0];
-        let value = pieces[1];
+        const key = pieces[0];
+        const value = pieces[1];
         if (!key) {
             continue;
         }
@@ -36,6 +36,7 @@ function createNodes(graphEntries: GraphEntry[]) {
 }
 
 class GraphEntry {
+    static regex = /[a-zA-Z0-9\-_.!~*'()%]+|\[\]/g;
     key: string;
     keys: string[];
     value: string;
@@ -46,7 +47,6 @@ class GraphEntry {
         this.value = value;
     }
 
-    static regex = /[a-zA-Z0-9\-\_\.\!\~\*\'\(\)\%]+|\[\]/g;
     private parseKey(key: string) {
         const matches = key.match(GraphEntry.regex);
         return (
@@ -68,7 +68,7 @@ class GraphNode {
 
     addValue(value: string) {
         const values = value.split(',');
-        for (let value of values) {
+        for (const value of values) {
             this.values.push(decodeURIComponent(value));
         }
     }
@@ -80,11 +80,11 @@ class GraphNode {
             node = new GraphNode();
             this.children[key] = node;
         }
-        index++;
-        if (graphEntry.keys.length === index) {
+        const nextIndex = index + 1;
+        if (graphEntry.keys.length === nextIndex) {
             node.addValue(graphEntry.value);
         } else {
-            node.addEntry(graphEntry, index);
+            node.addEntry(graphEntry, nextIndex);
         }
     }
 
@@ -110,7 +110,8 @@ class GraphNode {
         });
         if (outputArray.length) {
             if (Object.keys(outputObject).length) {
-                throw 'Cannot parse';
+                // TODO: Create Error type
+                throw new Error('Cannot parse');
             } else {
                 return outputArray.length > 1 ? outputArray : outputArray[0];
             }

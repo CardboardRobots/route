@@ -31,10 +31,10 @@ describe('encode', function () {
 
     it('should create an encoded query string for strings', function () {
         const input = {
-            a: 'first last',
+            nameA: 'first last',
         };
         const output = encode(input);
-        expect(output).toBe('a=first%20last');
+        expect(output).toBe('nameA=first%20last');
     });
 
     it('should create a query string for null', function () {
@@ -46,10 +46,10 @@ describe('encode', function () {
 
     it('should create a query string for multiple primitives', function () {
         const result = encode({
-            a: 'valueA',
-            b: 'valueB',
+            nameA: 'valueA',
+            nameB: 'valueB',
         });
-        expect(result).toBe('a=valueA&b=valueB');
+        expect(result).toBe('nameA=valueA&nameB=valueB');
     });
 
     it('should create a query string for arrays', function () {
@@ -62,24 +62,24 @@ describe('encode', function () {
     it('should create an entry object for objects', function () {
         const result = encode({
             key: {
-                a: 'valueA',
-                b: 'valueB',
+                nameA: 'valueA',
+                nameB: 'valueB',
             },
         });
-        expect(result).toBe('key[a]=valueA&key[b]=valueB');
+        expect(result).toBe('key[nameA]=valueA&key[nameB]=valueB');
     });
 
     it('should encode complex objects', function () {
         const result = encode({
-            a: [
+            nameA: [
                 1,
                 2,
                 {
-                    c: 'valueC',
+                    nameC: 'valueC',
                 },
             ],
-            b: 'valueB',
+            nameB: 'valueB',
         });
-        expect(result).toBe('a[]=1&a[]=2&a[][c]=valueC&b=valueB');
+        expect(result).toBe('nameA[]=1&nameA[]=2&nameA[][nameC]=valueC&nameB=valueB');
     });
 });
