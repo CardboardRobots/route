@@ -4,5 +4,6 @@ coverage/
 
 .github/
 .vscode/
+.eslintrc.json
 .prettierrc
 tsconfig.json
