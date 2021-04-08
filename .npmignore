@@ -2,6 +2,7 @@ node_modules/
 coverage/
 *.tgz
 
+.github/
 .vscode/
 .prettierrc
 tsconfig.json
