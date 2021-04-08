@@ -1,5 +1,6 @@
-import { createRoute } from './Route';
-import { createValidator } from './RouteValidator';
+import { createRoute } from '../route';
+
+import { createValidator } from './Validator';
 
 describe('createValidator', function () {
     it('should parse results', function () {
@@ -24,7 +25,7 @@ describe('createValidator', function () {
         );
         const result = route.match('base/1/name');
         // if (result) {
-        //   const { id, name } = result;
+        //     const { id, name } = result;
         // }
         expect(result).toStrictEqual({
             id: 1,

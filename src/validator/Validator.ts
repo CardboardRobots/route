@@ -1,3 +1,5 @@
+import { ValidationError, ValidationMessage } from './ValidationError';
+
 export class Validator<T extends Record<string, StringConstructor | NumberConstructor>> {
     validators: T;
 
@@ -27,11 +29,15 @@ export class Validator<T extends Record<string, StringConstructor | NumberConstr
     parse = (...args: any) => this.run(...args);
 }
 
+type ValidationResult<T extends Record<string, StringConstructor | NumberConstructor>> = {
+    [Property in keyof T]: T[Property] extends NumberConstructor ? number : string;
+};
+
 function validateString(value: string | undefined) {
     if (typeof value === 'string') {
         return value;
     } else {
-        throw new ValidationError('not a string');
+        throw new ValidationError(ValidationMessage.NotAString);
     }
 }
 
@@ -40,15 +46,9 @@ function validateNumber(value: number | undefined) {
     if (!isNaN(result) && isFinite(result)) {
         return result;
     } else {
-        throw new ValidationError('not a number');
+        throw new ValidationError(ValidationMessage.NotANumber);
     }
 }
-
-export class ValidationError extends Error {}
-
-type ValidationResult<T extends Record<string, StringConstructor | NumberConstructor>> = {
-    [Property in keyof T]: T[Property] extends NumberConstructor ? number : string;
-};
 
 export function createValidator<T extends Record<string, StringConstructor | NumberConstructor>>(validators: T) {
     const validator = new Validator(validators);

@@ -1,3 +1,5 @@
+import { ParseError, ParseMessage } from './ParseError';
+
 export function decode<
     T = {
         [index: string]: string;
@@ -110,8 +112,7 @@ class GraphNode {
         });
         if (outputArray.length) {
             if (Object.keys(outputObject).length) {
-                // TODO: Create Error type
-                throw new Error('Cannot parse');
+                throw new ParseError(ParseMessage.CannotParse);
             } else {
                 return outputArray.length > 1 ? outputArray : outputArray[0];
             }
