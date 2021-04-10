@@ -1,5 +1,5 @@
 import { stringToRegex } from './RouteUtil';
-import { createRoute, Route, defaultParseFunction } from './Route';
+import { Route, defaultParseFunction } from './Route';
 
 describe('Route', function () {
     describe('constructor', function () {
@@ -27,16 +27,31 @@ describe('Route', function () {
         });
     });
 
-    describe('run', function () {});
-
-    describe('match', function () {
-        describe('defaultParseFunction', function () {
-            const route = new Route((id, name) => `/test/${id}/${name}`, defaultParseFunction);
+    describe('run', function () {
+        describe('default parser', function () {
+            const route = new Route((id, name) => `/test/${id}/${name}`);
 
             it('should create route strings', function () {
                 const result = route.run(1, 'value');
                 expect(result).toBe('/test/1/value');
             });
+        });
+
+        describe('custom parser', function () {
+            const route = new Route(
+                (id, name) => `/test/${id}/${name}`,
+                (id, name) => ({ id, name })
+            );
+            it('should create route strings', function () {
+                const result = route.run(1, 'value');
+                expect(result).toBe('/test/1/value');
+            });
+        });
+    });
+
+    describe('match', function () {
+        describe('default parser', function () {
+            const route = new Route((id, name) => `/test/${id}/${name}`);
 
             it('should match route strings', function () {
                 const result = route.match('/test/1/value');
@@ -45,14 +60,10 @@ describe('Route', function () {
         });
 
         describe('custom parser', function () {
-            const route = createRoute(
+            const route = new Route(
                 (id, name) => `/test/${id}/${name}`,
                 (id, name) => ({ id, name })
             );
-            it('should create route strings', function () {
-                const result = route.run(1, 'value');
-                expect(result).toBe('/test/1/value');
-            });
 
             it('should create match objects', function () {
                 const result = route.match('/test/1/value');

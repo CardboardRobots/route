@@ -14,14 +14,20 @@ interface ParseFunction<T extends RouteFunction, U> {
     (...args: MatchParameters<T>): U;
 }
 
-export class Route<T extends RouteFunction, U extends ParseFunction<T, any>> {
+export class Route<
+    T extends RouteFunction,
+    U extends ParseFunction<T, any> = (...args: MatchParameters<T>) => MatchParameters<T>
+> {
     readonly route: T;
     readonly names: string[];
     readonly definition: string;
     readonly regExp: RegExp;
     readonly parser: U;
 
-    constructor(route: T, parser: U) {
+    constructor(route: T);
+    // eslint-disable-next-line @typescript-eslint/unified-signatures
+    constructor(route: T, parser: U);
+    constructor(route: any, parser: any = defaultParseFunction) {
         this.route = route;
         this.names = getParameterNames(route);
         this.definition = route(...this.names.map((name) => `:${name}`));
