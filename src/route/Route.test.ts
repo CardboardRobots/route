@@ -28,24 +28,11 @@ describe('Route', function () {
     });
 
     describe('run', function () {
-        describe('default parser', function () {
-            const route = new Route((id, name) => `/test/${id}/${name}`);
+        const route = new Route((id, name) => `/test/${id}/${name}`);
 
-            it('should create route strings', function () {
-                const result = route.run(1, 'value');
-                expect(result).toBe('/test/1/value');
-            });
-        });
-
-        describe('custom parser', function () {
-            const route = new Route(
-                (id, name) => `/test/${id}/${name}`,
-                (id, name) => ({ id, name })
-            );
-            it('should create route strings', function () {
-                const result = route.run(1, 'value');
-                expect(result).toBe('/test/1/value');
-            });
+        it('should create route strings', function () {
+            const result = route.run(1, 'value');
+            expect(result).toBe('/test/1/value');
         });
     });
 
@@ -72,6 +59,24 @@ describe('Route', function () {
                     name: 'value',
                 });
             });
+        });
+    });
+
+    describe('toString', function () {
+        it('should create parameter string', function () {
+            const route = new Route((id, name) => `/test/${id}/${name}`);
+
+            const result = route.toString();
+            expect(result).toBe('/test/:id/:name');
+        });
+    });
+
+    describe('toRegExp', function () {
+        it('should create a RegExp', function () {
+            const route = new Route((id, name) => `/test/${id}/${name}`);
+
+            const result = route.toRegExp();
+            expect(result).toStrictEqual(stringToRegex('/test/:id/:name'));
         });
     });
 });
