@@ -1,10 +1,11 @@
+import { ValidationError, ValidationMessage } from './ValidationError';
 import { ValidationSchema } from './ValidationSchema';
 
 export class NumberSchema extends ValidationSchema<any, number> {
-    validate(value: any) {
+    validate(value: any, property?: string) {
         const output = parseFloat(value);
         if (isNaN(output) && !isFinite(output)) {
-            throw new Error('validation error');
+            throw new ValidationError(ValidationMessage.NotANumber, property);
         }
         return output;
     }

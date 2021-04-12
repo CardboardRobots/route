@@ -1,7 +1,8 @@
+import { ValidationError, ValidationMessage } from './ValidationError';
 import { ValidationSchema } from './ValidationSchema';
 
 export class StringSchema extends ValidationSchema<any, string> {
-    validate(value: any): string {
+    validate(value: any, property?: string): string {
         switch (typeof value) {
             case 'string':
                 return value;
@@ -11,7 +12,7 @@ export class StringSchema extends ValidationSchema<any, string> {
             case 'boolean':
                 return value.toString();
             default:
-                throw new Error('validation error');
+                throw new ValidationError(ValidationMessage.NotAString, property);
         }
     }
 

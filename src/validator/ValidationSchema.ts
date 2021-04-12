@@ -1,5 +1,7 @@
+import { ValidationError, ValidationMessage } from './ValidationError';
+
 export abstract class ValidationSchema<INPUT, OUTPUT> {
-    abstract validate<T extends INPUT>(value: T): OUTPUT;
+    abstract validate<T extends INPUT>(value: T, property?: string): OUTPUT;
 
     abstract cast<T extends INPUT>(value: T): OUTPUT;
 
@@ -22,9 +24,9 @@ export class RequiredSchema<INNER extends ValidationSchema<any, any>> extends Va
         this.inner = inner;
     }
 
-    validate(value: any) {
+    validate(value: any, property?: string) {
         if (value === undefined || value === null) {
-            throw new Error('validation error');
+            throw new ValidationError(ValidationMessage.IsNullish, property);
         }
         return this.inner.validate(value);
     }

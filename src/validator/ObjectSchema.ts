@@ -1,3 +1,4 @@
+import { ValidationError, ValidationMessage } from './ValidationError';
 import { RequiredSchema, ValidationSchema } from './ValidationSchema';
 
 export type ObjectOutput<T> = {
@@ -23,17 +24,18 @@ export class ObjectSchema<T extends Record<string, ValidationSchema<any, any>>> 
         this.members = members;
     }
 
-    validate(value: any): ObjectOutput<T> {
+    validate(value: any, property?: string): ObjectOutput<T> {
         switch (typeof value) {
             case 'object': {
                 const result: ObjectOutput<T> = {} as any;
-                Object.entries(this.members).forEach(([name, member]) => {
-                    result[name as keyof T] = member.validate(value[name]);
-                });
+                Object.entries(this.members).reduce((result, [name, member]) => {
+                    result[name as keyof T] = member.validate(value[name], name);
+                    return result;
+                }, result);
                 return value;
             }
             default:
-                throw new Error('validation error');
+                throw new ValidationError(ValidationMessage.NotAnObject, property);
         }
     }
 
