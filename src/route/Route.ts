@@ -1,16 +1,18 @@
 import { stringToRegex, getParameterNames } from './RouteUtil';
 
-interface RouteFunction {
+export interface RouteFunction {
     (...args: (string | number)[]): string;
 }
 
-type MatchArray<T> = {
+export type MatchArray<T> = {
     [Property in keyof T]?: string;
 };
 
-type MatchParameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? MatchArray<P> : never;
+export type MatchParameters<T extends (...args: any) => any> = T extends (...args: infer P) => any
+    ? MatchArray<P>
+    : never;
 
-interface ParseFunction<T extends RouteFunction, U> {
+export interface ParseFunction<T extends RouteFunction, U> {
     (...args: MatchParameters<T>): U;
 }
 
