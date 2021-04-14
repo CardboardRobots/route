@@ -1,4 +1,4 @@
-import { ValidationError, ValidationMessage } from './ValidationError';
+import { ValidationError, ValidationMessage } from '../schema/ValidationError';
 
 export class Validator<T extends Record<string, StringConstructor | NumberConstructor>> {
     validators: T;
@@ -21,7 +21,7 @@ export class Validator<T extends Record<string, StringConstructor | NumberConstr
                     _validator = validateString;
                     break;
             }
-            result[key as keyof typeof result] = _validator(args[index]) as any;
+            result[key as keyof typeof result] = _validator(args[index], key) as any;
             return result;
         }, result);
     }
@@ -33,20 +33,20 @@ type ValidationResult<T extends Record<string, StringConstructor | NumberConstru
     [Property in keyof T]: T[Property] extends NumberConstructor ? number : string;
 };
 
-function validateString(value: string | undefined) {
+function validateString(value: string | undefined, property: string) {
     if (typeof value === 'string') {
         return value;
     } else {
-        throw new ValidationError(ValidationMessage.NotAString);
+        throw new ValidationError(ValidationMessage.NotAString, property);
     }
 }
 
-function validateNumber(value: number | undefined) {
+function validateNumber(value: number | undefined, property: string) {
     const result = Number(value);
     if (!isNaN(result) && isFinite(result)) {
         return result;
     } else {
-        throw new ValidationError(ValidationMessage.NotANumber);
+        throw new ValidationError(ValidationMessage.NotANumber, property);
     }
 }
 
