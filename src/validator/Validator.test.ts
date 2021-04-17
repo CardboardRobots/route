@@ -20,6 +20,7 @@ describe('createValidator', function () {
             (id, name) => `base/${id}/${name}`,
             createValidator({
                 id: Number,
+                test: Number,
                 name: String,
             })
         );

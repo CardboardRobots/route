@@ -7,10 +7,10 @@ export class Validator<T extends Record<string, StringConstructor | NumberConstr
         this.validators = validators;
     }
 
-    run(...args: any): ValidationResult<T> {
+    run<U extends []>(...args: U): ValidationResult<T> {
         const result: ValidationResult<T> = {} as any;
-        return Object.keys(this.validators).reduce((result, key, index) => {
-            const validator = this.validators[key];
+        const entries: Entries<T> = Object.entries(this.validators) as any;
+        return entries.reduce((result, [key, validator], index) => {
             let _validator: typeof validateString | typeof validateNumber;
             switch (validator) {
                 case Number:
@@ -21,7 +21,7 @@ export class Validator<T extends Record<string, StringConstructor | NumberConstr
                     _validator = validateString;
                     break;
             }
-            result[key as keyof typeof result] = _validator(args[index], key) as any;
+            result[key] = _validator(args[index], key) as any;
             return result;
         }, result);
     }
@@ -33,7 +33,7 @@ type ValidationResult<T extends Record<string, StringConstructor | NumberConstru
     [Property in keyof T]: T[Property] extends NumberConstructor ? number : string;
 };
 
-function validateString(value: string | undefined, property: string) {
+function validateString(value: string | undefined, property: string | number | symbol) {
     if (typeof value === 'string') {
         return value;
     } else {
@@ -41,7 +41,7 @@ function validateString(value: string | undefined, property: string) {
     }
 }
 
-function validateNumber(value: number | undefined, property: string) {
+function validateNumber(value: number | undefined, property: string | number | symbol) {
     const result = Number(value);
     if (!isNaN(result) && isFinite(result)) {
         return result;
@@ -54,3 +54,7 @@ export function createValidator<T extends Record<string, StringConstructor | Num
     const validator = new Validator(validators);
     return validator.parse;
 }
+
+export type Entries<T> = {
+    [K in keyof T]: [K, T[K]];
+}[keyof T][];

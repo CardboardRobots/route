@@ -1,12 +1,12 @@
 export class ValidationError extends Error {
-    property?: string;
-    constructor(message: string, property?: string) {
+    property?: string | number | symbol;
+    constructor(message: string, property?: string | number | symbol) {
         super(message);
         this.property = property;
     }
 
     toString() {
-        return this.property ? `${this.property}: ${this.message}` : this.message;
+        return this.property ? `${String(this.property)}: ${this.message}` : this.message;
     }
 }
 

@@ -22,7 +22,11 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "prefer-const": "error",
         "no-warning-comments": "warn",
-        "@typescript-eslint/consistent-indexed-object-style": ["error", "record"]
+        "@typescript-eslint/consistent-indexed-object-style": [
+            "error",
+            "record"
+        ]
     }
 }
