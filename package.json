@@ -1,7 +1,10 @@
 {
-  "name": "@sierra/route",
+  "name": "@cardboardrobots/route",
   "version": "0.0.0",
-  "description": "Routing utilities for Client and Server",
+  "description": "Route formater and parser",
+  "repository": {
+    "url": "http://github.com/cardboardrobots/route"
+  },
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "scripts": {
