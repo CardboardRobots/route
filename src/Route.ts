@@ -21,7 +21,7 @@ export class Route<
     U extends ParseFunction<T, any> = (...args: MatchParameters<T>) => MatchParameters<T>
 > {
     readonly route: T;
-    readonly names: string[];
+    names: string[];
     readonly definition: string;
     readonly regExp: RegExp;
     readonly parser: U;
@@ -48,6 +48,11 @@ export class Route<
         } else {
             return undefined;
         }
+    }
+
+    setNames(names: string[]) {
+        this.names = names;
+        return this;
     }
 
     toString() {

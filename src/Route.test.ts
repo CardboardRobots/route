@@ -79,4 +79,18 @@ describe('Route', function () {
             expect(result).toStrictEqual(stringToRegex('/test/:id/:name'));
         });
     });
+
+    describe('setNames', function () {
+        it('should set names', function () {
+            const route = new Route((id, name) => `/test/${id}/${name}`);
+            route.setNames(['first', 'second']);
+            expect(route.names).toStrictEqual(['first', 'second']);
+        });
+
+        it('should return the route', function () {
+            const route = new Route((id, name) => `/test/${id}/${name}`);
+            const result = route.setNames(['first', 'second']);
+            expect(route).toBe(result);
+        });
+    });
 });
