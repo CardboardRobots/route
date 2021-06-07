@@ -21,20 +21,24 @@ export class Route<
     U extends ParseFunction<T, any> = (...args: MatchParameters<T>) => MatchParameters<T>
 > {
     readonly route: T;
-    names: string[];
-    readonly definition: string;
-    readonly regExp: RegExp;
     readonly parser: U;
+    names: Parameters<T>;
+    definition: string;
+    regExp: RegExp;
 
     constructor(route: T);
     // eslint-disable-next-line @typescript-eslint/unified-signatures
-    constructor(route: T, parser: U);
-    constructor(route: any, parser: any = defaultParseFunction) {
+    constructor(route: T, parser: U, names?: Parameters<T>);
+    constructor(
+        route: any,
+        parser: any = defaultParseFunction,
+        names: Parameters<T> = getParameterNames(route) as any
+    ) {
         this.route = route;
-        this.names = getParameterNames(route);
+        this.parser = parser;
+        this.names = names;
         this.definition = route(...this.names.map((name) => `:${name}`));
         this.regExp = stringToRegex(this.definition);
-        this.parser = parser;
     }
 
     run(...args: Parameters<T>) {
@@ -50,8 +54,11 @@ export class Route<
         }
     }
 
-    setNames(names: string[]) {
+    setNames(...names: Parameters<T>) {
         this.names = names;
+        this.definition = this.route(...this.names.map((name) => `:${name}`));
+        this.regExp = stringToRegex(this.definition);
+
         return this;
     }
 

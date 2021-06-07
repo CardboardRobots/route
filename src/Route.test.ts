@@ -3,28 +3,43 @@ import { Route, defaultParseFunction } from './Route';
 
 describe('Route', function () {
     describe('constructor', function () {
-        const routeFunction = (id: string | number, name: string | number) => `/test/${id}/${name}`;
-        const route = new Route(routeFunction, defaultParseFunction);
+        describe('default', function () {
+            const routeFunction = (id: string | number, name: string | number) => `/test/${id}/${name}`;
+            const route = new Route(routeFunction, defaultParseFunction);
 
-        it('should set route', function () {
-            expect(route.route).toBe(routeFunction);
+            it('should set route', function () {
+                expect(route.route).toBe(routeFunction);
+            });
+
+            it('should set names', function () {
+                expect(route.names).toStrictEqual(['id', 'name']);
+            });
+
+            it('should set definition', function () {
+                expect(route.definition).toBe('/test/:id/:name');
+            });
+
+            it('should set regExp', function () {
+                expect(route.regExp).toStrictEqual(stringToRegex('/test/:id/:name'));
+            });
+
+            it('should set parser', function () {
+                expect(route.parser).toBe(defaultParseFunction);
+            });
         });
 
-        it('should set names', function () {
-            expect(route.names).toStrictEqual(['id', 'name']);
+        describe('parser', function () {
+            const routeFunction = (id: string | number, name: string | number) => `/test/${id}/${name}`;
+            const route = new Route(routeFunction, defaultParseFunction, ['first', 'second']);
+
+            it('should set parser', function () {
+                const result = route.toString();
+                expect(result).toBe('/test/:first/:second');
+                expect(route.names).toStrictEqual(['first', 'second']);
+            });
         });
 
-        it('should set definition', function () {
-            expect(route.definition).toBe('/test/:id/:name');
-        });
-
-        it('should set regExp', function () {
-            expect(route.regExp).toStrictEqual(stringToRegex('/test/:id/:name'));
-        });
-
-        it('should set parser', function () {
-            expect(route.parser).toBe(defaultParseFunction);
-        });
+        describe('names', function () {});
     });
 
     describe('run', function () {
@@ -83,13 +98,15 @@ describe('Route', function () {
     describe('setNames', function () {
         it('should set names', function () {
             const route = new Route((id, name) => `/test/${id}/${name}`);
-            route.setNames(['first', 'second']);
-            expect(route.names).toStrictEqual(['first', 'second']);
+            route.setNames('first', 1);
+            const result = route.toString();
+            expect(route.names).toStrictEqual(['first', 1]);
+            expect(result).toBe('/test/:first/:1');
         });
 
         it('should return the route', function () {
             const route = new Route((id, name) => `/test/${id}/${name}`);
-            const result = route.setNames(['first', 'second']);
+            const result = route.setNames('first', 'second');
             expect(route).toBe(result);
         });
     });
