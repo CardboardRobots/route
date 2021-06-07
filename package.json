@@ -1,6 +1,6 @@
 {
   "name": "@cardboardrobots/route",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Route formater and parser",
   "repository": {
     "url": "http://github.com/cardboardrobots/route"
