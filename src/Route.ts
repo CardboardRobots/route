@@ -74,9 +74,13 @@ export class Route<
 export function createRoute<T extends RouteFunction>(
     route: T
 ): Route<T, (...args: MatchParameters<T>) => MatchParameters<T>>;
-export function createRoute<T extends RouteFunction, U extends ParseFunction<T, any>>(route: T, parser: U): Route<T, U>;
-export function createRoute(route: any, parser: any = defaultParseFunction) {
-    return new Route(route, parser);
+export function createRoute<T extends RouteFunction, U extends ParseFunction<T, any>>(
+    route: T,
+    parser: U,
+    names?: Parameters<T>
+): Route<T, U>;
+export function createRoute(route: any, parser: any = defaultParseFunction, names?: any) {
+    return new Route(route, parser, names);
 }
 
 export function defaultParseFunction<T extends RouteFunction>(...args: MatchParameters<T>) {
